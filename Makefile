@@ -16,8 +16,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-CONFIG_WITHOUT_READLINE=y
-CONFIG_ENABLE_GDB_LOG=n
+CONFIG_WITHOUT_READLINE ?= y
+CONFIG_ENABLE_GDB_LOG   ?= n
 
 CC ?= gcc
 INSTALL = /usr/bin/install
