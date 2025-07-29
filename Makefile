@@ -16,16 +16,20 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+CONFIG_WITHOUT_READLINE=y
+CONFIG_ENABLE_GDB_LOG=n
+
 CC ?= gcc
 INSTALL = /usr/bin/install
 PREFIX ?= ./dist
 LDFLAGS ?= -s
 DESTDIR = ./dist
+VERSION = $(shell sh -c 'cat VERSION')
 
 UNAME_S := $(shell sh -c 'uname -s')
 UNAME_O := $(shell sh -c 'uname -o 2> /dev/null')
 
-ifdef WITHOUT_READLINE
+ifeq ($(CONFIG_WITHOUT_READLINE),y)
 	READLINE_CFLAGS =
 	READLINE_LIBS =
 	CONSOLE_INPUT_OBJ = ui/input_console.o
@@ -87,7 +91,11 @@ endif
 
 INCLUDES = -I. -Isimio -Iformats -Itransport -Idrivers -Iutil -Iui
 GCC_CFLAGS = -O1 -Wall -Wno-char-subscripts -ggdb
-CONFIG_CFLAGS = 
+CONFIG_CFLAGS +=
+
+ifeq ($(CONFIG_ENABLE_GDB_LOG),y)
+	CONFIG_CFLAGS += -DDEBUG_GDB
+endif
 
 MSPDEBUG_LDFLAGS = $(LDFLAGS) $(PORTS_LDFLAGS)
 MSPDEBUG_LIBS = -L. -lusb0 $(READLINE_LIBS) $(OS_LIBS)
@@ -108,6 +116,8 @@ install: $(BINARY) mspdebug.man
 	cp -f $(MSYSTEM_PREFIX)/bin/libusb0.dll $(DESTDIR)/
 	cp -f $(MSYSTEM_PREFIX)/bin/libgnurx-0.dll $(DESTDIR)/
 	cp -f ./MSP430.dll $(DESTDIR)/
+	$(RM) mspdebug-*.zip
+	zip -rj mspdebug-$(VERSION)-win32.zip $(DESTDIR)/*
 
 .SUFFIXES: .c .o
 

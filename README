@@ -13,8 +13,7 @@ pacman -Sy mingw-w64-i686-libusb-win32 mingw-w64-i686-libgnurx
 然后执行编译，使用 mingw32 而不是 mingw64，因为 MSP430.dll 是 32 位的
 ```
 make clean
-make all WITHOUT_READLINE=y
-make install WITHOUT_READLINE=y
+make all && make install
 ```
 
 ----------------------------------------
